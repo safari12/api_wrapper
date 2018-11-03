@@ -1,12 +1,12 @@
-defmodule Test.Wrapper do
+defmodule API.Wrapper.Sample do
   use API.Wrapper,
     wrappers: [%{
-      name: :list_markets,
-      endpoint: "/markets",
+      name: :hello_world,
+      endpoint: "/hello_world",
       method: :get
     }, %{
-      name: :order_book,
-      endpoint: "/orders",
+      name: :yo_world,
+      endpoint: "/yo_world",
       method: :get,
       path_query: :market
     }]

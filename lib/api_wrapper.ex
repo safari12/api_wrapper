@@ -24,6 +24,18 @@ defmodule API.Wrapper do
   def wrapper_url(%{method: :get, endpoint: en, path_query: _}, [pqv]) do
     en <> "/#{pqv}"
   end
+
+  def wrapper_url(
+    %{method: :get, endpoint: en, query: query_keys},
+    query_values
+  ) when is_list(query_keys) and is_list(query_values) do
+    query = Enum.zip(query_keys, query_values)
+    |> Enum.into(%{})
+    |> URI.encode_query
+
+    en <> "?#{query}"
+  end
+
   def wrapper_url(%{method: :get, endpoint: en}, []), do: en
 
   defmacro generate_wrapper_func(wrapper) do
