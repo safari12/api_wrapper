@@ -2,8 +2,9 @@ defmodule API.Wrapper do
   defmacro __using__(options) do
     quote do
       use Tesla
+      import API.Wrapper
 
-      unquote(options[:wrappers])
+      IO.inspect unquote(options[:wrappers])
       |> Enum.each(&generate_wrapper_func/1)
     end
   end
@@ -20,22 +21,25 @@ defmodule API.Wrapper do
 
   def wrapper_func_name(%{name: name}), do: name
 
-  def generate_wrapper_func(wrapper) do
+  def wrapper_url(%{method: :get, endpoint: en, path_query: _}, [pqv]) do
+    en <> "/#{pqv}"
+  end
+  def wrapper_url(%{method: :get, endpoint: en}, []), do: en
+
+  defmacro generate_wrapper_func(wrapper) do
     quote bind_quoted: [wrapper: wrapper] do
       func_args = wrapper_func_args(wrapper)
       func_name = wrapper_func_name(wrapper)
       def unquote(func_name)(unquote_splicing(func_args)) do
-        api_call(
-          unquote(Macro.escape(wrapper)),
-          unquote(func_args)
-        )
+        wrapper_url(unquote(Macro.escape(wrapper)), unquote(func_args))
+        |> api_call
       end
     end
   end
 
-  defmacro api_call(%{url: url, method: :get}, []) do
+  defmacro api_call(url) do
     quote do
-      url |> get
+      unquote(url) |> get
     end
   end
 end
