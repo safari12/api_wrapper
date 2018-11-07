@@ -1,3 +1,3 @@
-Code.load_file("test/sample_wrapper.ex")
+Code.load_file("test/api_wrapper/sample_wrapper.ex")
 
 ExUnit.start()

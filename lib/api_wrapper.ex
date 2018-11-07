@@ -38,6 +38,13 @@ defmodule API.Wrapper do
 
   def wrapper_url(%{method: :get, endpoint: en}, []), do: en
 
+  def wrapper_url(
+    %{method: :post, endpoint: en, data: data_keys},
+    data_values
+  ) when is_list(data_keys) and is_list(data_values) do
+    
+  end
+
   defmacro generate_wrapper_func(wrapper) do
     quote bind_quoted: [wrapper: wrapper] do
       func_args = wrapper_func_args(wrapper)
